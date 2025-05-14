@@ -6,8 +6,9 @@ import django_heroku
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY
-heroku config:set SECRET_KEY='your-generated-secret-key-here' --app my-django-app-123
+import os
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 
 DEBUG = False  # Make sure to set DEBUG to False in production
