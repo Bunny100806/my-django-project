@@ -7,7 +7,8 @@ import django_heroku
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = 'your-generated-secret-key-here'
+heroku config:set SECRET_KEY='your-generated-secret-key-here'
+
 DEBUG = False  # Make sure to set DEBUG to False in production
 ALLOWED_HOSTS = ['site79103.onrender.com', '127.0.0.1', 'localhost']
 
@@ -94,4 +95,7 @@ LOGOUT_REDIRECT_URL = '/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Automatically configure for Heroku/Render-style deployment
+django_heroku.settings(locals())
+
+import django_heroku
 django_heroku.settings(locals())
