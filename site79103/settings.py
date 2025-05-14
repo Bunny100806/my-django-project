@@ -7,7 +7,8 @@ import django_heroku
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-heroku config:set SECRET_KEY='your-generated-secret-key-here'
+heroku config:set SECRET_KEY='your-generated-secret-key-here' --app my-django-app-123
+
 
 DEBUG = False  # Make sure to set DEBUG to False in production
 ALLOWED_HOSTS = ['site79103.onrender.com', '127.0.0.1', 'localhost']
