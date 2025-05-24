@@ -1,23 +1,29 @@
 import os
 from pathlib import Path
-import dj_database_url
 import django_heroku
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = 'Bunny@1234'  # Replace with env var for production
 
-DEBUG = False
-ALLOWED_HOSTS = ['site79103.onrender.com', '127.0.0.1', 'localhost']
+DEBUG = True  # Set False on production!
+
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'my-django-app-123.herokuapp.com',  # your Heroku app domain
+]
 
 INSTALLED_APPS = [
+    'rest_framework.authtoken',  # Token auth
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
+    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -35,12 +41,12 @@ ROOT_URLCONF = 'site79103.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'core' / 'templates'],
+        'DIRS': [BASE_DIR / 'core' / 'templates'],  # your templates folder
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',
+                'django.template.context_processors.request',  # needed for auth templates
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -50,9 +56,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'site79103.wsgi.application'
 
-# ✅ Use Heroku DATABASE_URL directly
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -63,24 +71,51 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
+
+LANGUAGES = [
+    ('en', 'English'),
+]
+
 TIME_ZONE = 'UTC'
+
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# Static files
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',  # local static files (dev)
+]
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # for collectstatic (production)
 
+# Media files (user uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Email backend for development (prints emails to console)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+# Auth redirects
 LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/login/'  # Make sure this matches your login URL path
 LOGOUT_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ✅ Enable Heroku configuration
+# Celery config for task queue (make sure Redis is running locally for dev)
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
+# DRF (Django REST Framework) config
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',  # For browsable API login
+        'rest_framework.authentication.TokenAuthentication',    # For token auth
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',  # Auth required for unsafe methods
+    ],
+}
+
+# Activate Django-Heroku.
 django_heroku.settings(locals())

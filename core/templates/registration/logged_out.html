@@ -1,4 +1,6 @@
-{% extends 'core/base.html' %}
-{% block content %}
-<p>You have been logged out.</p><a href="/">Go Home</a>
-{% endblock %}
+<form method="post" action="{% url 'logout' %}" style="display: inline;">
+  {% csrf_token %}
+  <button type="submit" style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer;">
+    Logout
+  </button>
+</form>

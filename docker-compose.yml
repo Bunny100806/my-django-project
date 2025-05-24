@@ -1,0 +1,23 @@
+
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: Bunny122704
+      POSTGRES_USER: saich
+      POSTGRES_PASSWORD: Bunny@1234
+  redis:
+    image: redis
+  celery:
+    build: .
+    command: celery -A site79103 worker --loglevel=info
+    depends_on:
+      - redis

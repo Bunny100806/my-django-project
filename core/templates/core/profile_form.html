@@ -1,5 +1,15 @@
-{% extends 'core/base.html' %}
+{% extends "core/base.html" %}
+{% block title %}Edit Profile{% endblock %}
+
 {% block content %}
-<h2>Edit Profile</h2>
-<form method="post" enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<button type="submit">Save</button></form>
+<div class="max-w-xl mx-auto bg-white shadow-md rounded p-6">
+  <h2 class="text-2xl font-bold mb-4">Update Profile</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">
+      Save Changes
+    </button>
+  </form>
+</div>
 {% endblock %}
