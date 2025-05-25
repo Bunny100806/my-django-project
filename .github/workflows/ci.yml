@@ -12,7 +12,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.11'  # ✅ Make sure this is not 3.1
+          python-version: '3.11'  # Use quotes for the version
 
       - name: Install dependencies
         run: |
@@ -22,4 +22,3 @@ jobs:
       - name: Run Django Tests
         run: |
           python manage.py test
-
